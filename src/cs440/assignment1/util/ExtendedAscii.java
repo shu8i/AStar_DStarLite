@@ -30,14 +30,4 @@ public class ExtendedAscii {
         return (char) code;
     }
 
-    public static final void printChar(int code) {
-        System.out.printf("%c%n", getAscii(code));
-    }
-
-    public static void main(String[] args) {
-        printChar(153);
-        printChar(63);
-    }
-
-
 }
