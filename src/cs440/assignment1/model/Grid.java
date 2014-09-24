@@ -1,5 +1,7 @@
 package cs440.assignment1.model;
 
+import cs440.assignment1.util.ExtendedAscii;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -17,6 +19,19 @@ public class Grid {
 
     private Grid(Builder builder) {
         this.grid = builder.grid;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer stringBuffer = new StringBuffer();
+        for (int i = 0; i < this.grid.length; i++) {
+            stringBuffer.append("\t|");
+            for (int j = 0; j < this.grid[0].length; j++) {
+                stringBuffer.append(this.grid[i][j].is(FREE) ? " |" : ExtendedAscii.getAscii(177) + "|");
+            }
+            stringBuffer.append("\n");
+        }
+        return stringBuffer.toString();
     }
 
     public static class Builder {

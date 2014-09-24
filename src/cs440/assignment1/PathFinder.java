@@ -9,6 +9,7 @@ public class PathFinder {
 
     public static void main(String[] args) {
         Grid grid = new Grid.Builder().build();
+        System.out.println(grid);
     }
 
 }
