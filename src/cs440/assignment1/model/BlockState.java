@@ -11,7 +11,7 @@ public enum BlockState {
     VISITED("VISITED"),
     START("START"),
     TARGET("TARGET"),
-    CURRENT("CURRENT");
+    AGENT("AGENT");
 
 
     private final String text;

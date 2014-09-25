@@ -13,28 +13,38 @@ import static cs440.assignment1.model.BlockState.*;
  */
 public class Grid {
 
-    private static final int GRID_WIDTH = 101, GRID_HEIGHT = 101;
-    private static final int GRID_SIZE = GRID_WIDTH * GRID_HEIGHT;
+    protected static final int GRID_WIDTH = 101, GRID_HEIGHT = 101;
+    protected static final int GRID_SIZE = GRID_WIDTH * GRID_HEIGHT;
     private Block[][] grid;
-    private Block start, target, current;
+    private Block startingPosition, targetPosition;
 
     private Grid(Builder builder) {
         this.grid = builder.grid;
-        this.start = builder.start;
-        this.target = builder.target;
-        this.current = this.start;
+        this.startingPosition = builder.startingPosition;
+        this.targetPosition = builder.targetPosition;
     }
 
-    public Block getStart() {
-        return this.start;
+    public Block getStartingPosition() {
+        return this.startingPosition;
     }
 
-    public Block getTarget() {
-        return this.target;
+    public Block getTargetPosition() {
+        return this.targetPosition;
     }
 
-    public Block getCurrent() {
-        return this.current;
+    public Block getBlock(Coordinate coordinate) {
+        return this.grid[coordinate.getY()][coordinate.getX()];
+    }
+
+    public boolean isCoordinateValid(Coordinate coordinate) {
+
+        if (coordinate.getY() >= GRID_HEIGHT || coordinate.getY() < 0 ||
+                coordinate.getX() >= GRID_WIDTH || coordinate.getX() < 0) {
+            return false;
+        }
+
+        Block block = this.grid[coordinate.getY()][coordinate.getX()];
+        return block.is(FREE);
     }
 
     @Override
@@ -48,8 +58,8 @@ public class Grid {
                 if (block.is(FREE)) {
                     if(block.is(START)) {
                         stringBuffer.append("S");
-                    } else if (block.is(CURRENT)) {
-                        stringBuffer.append("C");
+                    } else if (block.is(AGENT)) {
+                        stringBuffer.append("A");
                     } else if (block.is(TARGET)) {
                         stringBuffer.append("T");
                     } else {
@@ -75,17 +85,17 @@ public class Grid {
          */
         private Stack<Block> unblockedPath = new Stack<Block>();
         private Random random = new Random();
-        private Block start, target;
+        private Block startingPosition, targetPosition;
 
         public Builder() {
             initializeEmptyGrid();
         }
 
         private void setEndpointPositions() {
-            while ( (this.start = this.grid[random.nextInt(GRID_HEIGHT)][random.nextInt(GRID_WIDTH)]).is(BLOCKED) );
-            while ( (this.target = this.grid[random.nextInt(GRID_HEIGHT)][random.nextInt(GRID_WIDTH)]).is(BLOCKED) );
-            this.start.add(START);
-            this.target.add(TARGET);
+            while ( (this.startingPosition = this.grid[random.nextInt(GRID_HEIGHT)][random.nextInt(GRID_WIDTH)]).is(BLOCKED) );
+            while ( (this.targetPosition = this.grid[random.nextInt(GRID_HEIGHT)][random.nextInt(GRID_WIDTH)]).is(BLOCKED) );
+            this.startingPosition.add(START);
+            this.targetPosition.add(TARGET);
         }
 
         public Grid build() {
@@ -124,19 +134,19 @@ public class Grid {
             List<Coordinate> validCoordinates = new ArrayList<Coordinate>();
             Coordinate currentCoorinates = currentBlock.coordinates();
 
-            if (coordinateIsValid(currentCoorinates.getX()+1, currentCoorinates.getY())) {
+            if (isCoordinateValid(currentCoorinates.getX()+1, currentCoorinates.getY())) {
                 validCoordinates.add(new Coordinate(currentCoorinates.getX()+1, currentCoorinates.getY()));
             }
 
-            if (coordinateIsValid(currentCoorinates.getX()-1, currentCoorinates.getY())) {
+            if (isCoordinateValid(currentCoorinates.getX()-1, currentCoorinates.getY())) {
                 validCoordinates.add(new Coordinate(currentCoorinates.getX()-1, currentCoorinates.getY()));
             }
 
-            if (coordinateIsValid(currentCoorinates.getX(), currentCoorinates.getY()+1)) {
+            if (isCoordinateValid(currentCoorinates.getX(), currentCoorinates.getY()+1)) {
                 validCoordinates.add(new Coordinate(currentCoorinates.getX(), currentCoorinates.getY()+1));
             }
 
-            if (coordinateIsValid(currentCoorinates.getX(), currentCoorinates.getY()-1)) {
+            if (isCoordinateValid(currentCoorinates.getX(), currentCoorinates.getY()-1)) {
                 validCoordinates.add(new Coordinate(currentCoorinates.getX(), currentCoorinates.getY()-1));
             }
 
@@ -148,7 +158,7 @@ public class Grid {
             }
         }
 
-        private boolean coordinateIsValid(int x, int y) {
+        private boolean isCoordinateValid(int x, int y) {
 
             if (y >= GRID_HEIGHT || y < 0 || x >= GRID_WIDTH || x < 0) {
                 return false;

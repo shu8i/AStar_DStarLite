@@ -1,5 +1,8 @@
 package cs440.assignment1;
 
+import cs440.assignment1.model.Agent;
+import cs440.assignment1.model.Block;
+import cs440.assignment1.model.Coordinate;
 import cs440.assignment1.model.Grid;
 
 import java.util.ArrayList;
@@ -10,14 +13,14 @@ import java.util.List;
  */
 public class PathFinder {
 
-    private static List<Grid> grids = new ArrayList<Grid>();
-
     public static void main(String[] args) {
 
-        for(int i = 0; i < 50; i++) {
-            grids.add(new Grid.Builder().build());
-        }
-        System.out.println(grids.get(0));
+        Grid grid = new Grid.Builder().build();
+        Agent agent = new Agent(grid);
+        Block agentPosition = agent.getCurrentPosition();
+        agent.move(new Coordinate(agentPosition.coordinates().getX()+1, agentPosition.coordinates().getY())); //might throw exception if new position is blocked. For testing only.
+        System.out.println(grid);
+
     }
 
 }
