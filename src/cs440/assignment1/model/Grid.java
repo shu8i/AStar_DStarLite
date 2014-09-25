@@ -16,9 +16,25 @@ public class Grid {
     private static final int GRID_WIDTH = 101, GRID_HEIGHT = 101;
     private static final int GRID_SIZE = GRID_WIDTH * GRID_HEIGHT;
     private Block[][] grid;
+    private Block start, target, current;
 
     private Grid(Builder builder) {
         this.grid = builder.grid;
+        this.start = builder.start;
+        this.target = builder.target;
+        this.current = this.start;
+    }
+
+    public Block getStart() {
+        return this.start;
+    }
+
+    public Block getTarget() {
+        return this.target;
+    }
+
+    public Block getCurrent() {
+        return this.current;
     }
 
     @Override
@@ -27,7 +43,23 @@ public class Grid {
         for (int i = 0; i < this.grid.length; i++) {
             stringBuffer.append("\t|");
             for (int j = 0; j < this.grid[0].length; j++) {
-                stringBuffer.append(this.grid[i][j].is(FREE) ? " |" : ExtendedAscii.getAscii(177) + "|");
+                Block block = this.grid[i][j];
+
+                if (block.is(FREE)) {
+                    if(block.is(START)) {
+                        stringBuffer.append("S");
+                    } else if (block.is(CURRENT)) {
+                        stringBuffer.append("C");
+                    } else if (block.is(TARGET)) {
+                        stringBuffer.append("T");
+                    } else {
+                        stringBuffer.append(" ");
+                    }
+                    stringBuffer.append("|");
+                } else {
+                    stringBuffer.append(ExtendedAscii.getAscii(177)).append("|");
+                }
+
             }
             stringBuffer.append("\n");
         }
@@ -43,9 +75,17 @@ public class Grid {
          */
         private Stack<Block> unblockedPath = new Stack<Block>();
         private Random random = new Random();
+        private Block start, target;
 
         public Builder() {
             initializeEmptyGrid();
+        }
+
+        private void setEndpointPositions() {
+            while ( (this.start = this.grid[random.nextInt(GRID_HEIGHT)][random.nextInt(GRID_WIDTH)]).is(BLOCKED) );
+            while ( (this.target = this.grid[random.nextInt(GRID_HEIGHT)][random.nextInt(GRID_WIDTH)]).is(BLOCKED) );
+            this.start.add(START);
+            this.target.add(TARGET);
         }
 
         public Grid build() {
@@ -72,6 +112,8 @@ public class Grid {
                 numVisitedBlocks++;
 
             }
+
+            setEndpointPositions();
 
             return new Grid(this);
 

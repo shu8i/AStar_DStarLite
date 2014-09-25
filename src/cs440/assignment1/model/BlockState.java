@@ -8,7 +8,10 @@ public enum BlockState {
     BLOCKED("BLOCKED"),
     FREE("FREE"),
     UNVISITED("UNVISITED"),
-    VISITED("VISITED");
+    VISITED("VISITED"),
+    START("START"),
+    TARGET("TARGET"),
+    CURRENT("CURRENT");
 
 
     private final String text;
