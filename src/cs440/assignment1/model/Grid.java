@@ -44,7 +44,7 @@ public class Grid {
         }
 
         Block block = this.grid[coordinate.getY()][coordinate.getX()];
-        return block.is(FREE);
+        return block.is(UNBLOCKED);
     }
 
     @Override
@@ -55,13 +55,15 @@ public class Grid {
             for (int j = 0; j < this.grid[0].length; j++) {
                 Block block = this.grid[i][j];
 
-                if (block.is(FREE)) {
+                if (block.is(UNBLOCKED)) {
                     if(block.is(START)) {
                         stringBuffer.append("S");
                     } else if (block.is(AGENT)) {
                         stringBuffer.append("A");
                     } else if (block.is(TARGET)) {
                         stringBuffer.append("T");
+                    } else if (block.is(BREADCRUMB)) {
+                        stringBuffer.append(".");
                     } else {
                         stringBuffer.append(" ");
                     }
@@ -101,7 +103,7 @@ public class Grid {
         public Grid build() {
 
             Block currentBlock = this.grid[random.nextInt(GRID_HEIGHT)][random.nextInt(GRID_WIDTH)];
-            currentBlock.remove(UNVISITED).add(VISITED).add(FREE);
+            currentBlock.remove(UNVISITED).add(VISITED).add(UNBLOCKED);
             unblockedPath.add(currentBlock);
             int numVisitedBlocks = 1;
 
@@ -114,7 +116,7 @@ public class Grid {
                 if (random.nextInt(10) > 6) {
                     currentBlock.add(BLOCKED);
                 } else {
-                    currentBlock.add(FREE);
+                    currentBlock.add(UNBLOCKED);
                 }
 
                 currentBlock.remove(UNVISITED).add(VISITED);

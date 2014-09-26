@@ -6,12 +6,13 @@ package cs440.assignment1.model;
 public enum BlockState {
 
     BLOCKED("BLOCKED"),
-    FREE("FREE"),
+    UNBLOCKED("UNBLOCKED"),
     UNVISITED("UNVISITED"),
     VISITED("VISITED"),
     START("START"),
     TARGET("TARGET"),
-    AGENT("AGENT");
+    AGENT("AGENT"),
+    BREADCRUMB("BREADCRUMB");
 
 
     private final String text;

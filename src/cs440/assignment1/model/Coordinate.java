@@ -21,6 +21,17 @@ public class Coordinate {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
+
+        Coordinate coordinate = (Coordinate) o;
+        return coordinate.getX() == this.getX() &&
+                coordinate.getY() == this.getY();
+    }
+
+    @Override
     public String toString() {
         return this.x + ", " + this.y;
     }

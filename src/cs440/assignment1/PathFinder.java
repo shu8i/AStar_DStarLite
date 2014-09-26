@@ -1,5 +1,6 @@
 package cs440.assignment1;
 
+import cs440.assignment1.control.ForwardAStar;
 import cs440.assignment1.model.Agent;
 import cs440.assignment1.model.Block;
 import cs440.assignment1.model.Coordinate;
@@ -17,8 +18,10 @@ public class PathFinder {
 
         Grid grid = new Grid.Builder().build();
         Agent agent = new Agent(grid);
-        Block agentPosition = agent.getCurrentPosition();
-        agent.move(new Coordinate(agentPosition.coordinates().getX()+1, agentPosition.coordinates().getY())); //might throw exception if new position is blocked. For testing only.
+        System.out.println(grid);
+        ForwardAStar aStar = new ForwardAStar(grid, agent);
+//        Block agentPosition = agent.getCurrentPosition();
+//        agent.move(new Coordinate(agentPosition.coordinates().getX()+1, agentPosition.coordinates().getY())); //might throw exception if new position is blocked. For testing only.
         System.out.println(grid);
 
     }
