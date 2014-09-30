@@ -25,6 +25,13 @@ public class BinaryHeap {
         return N;
     }
     
+    public boolean contains(Block b){
+    	for (int i = 1; i < N+1; i++){
+    		if (b.equals(minqueue[i])) return true;
+    	}
+    	return false;
+    }
+    
     public Block peek() {
         if (isEmpty()) return null;
         return minqueue[1];
@@ -36,7 +43,7 @@ public class BinaryHeap {
         Block first = minqueue[N];
         N--;
         minqueue[N+1] = null;
-        fixPoll(1);
+        fixRemove(1);
         if ((N > 0) && (N == (minqueue.length-1)/4)) newSize(minqueue.length/2);
         return first;
     }
@@ -47,6 +54,18 @@ public class BinaryHeap {
         N++;
         minqueue[N] = b;
         fixAdd(N);
+    }
+    
+    public void remove(Block b){
+    	int x = 0;
+    	for (int i = 1; i < N+1; i++){
+    		if (b.equals(minqueue[i])) x = i;
+    	}
+    	swap(x, N);
+    	N--;
+        minqueue[N+1] = null;
+        fixRemove(x);
+        if ((N > 0) && (N == (minqueue.length-1)/4)) newSize(minqueue.length/2);
     }
 
     /* helper functions */
@@ -68,7 +87,7 @@ public class BinaryHeap {
         }
     }
     
-    private void fixPoll(int x){
+    private void fixRemove(int x){
     	 while (2*x <= N) {
              int t = 2*x;
              if (t < N && compare(t, t+1)) t++;

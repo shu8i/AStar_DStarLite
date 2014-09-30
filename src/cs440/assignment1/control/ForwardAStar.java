@@ -1,6 +1,7 @@
 package cs440.assignment1.control;
 
 import cs440.assignment1.model.Agent;
+import cs440.assignment1.model.BinaryHeap;
 import cs440.assignment1.model.Block;
 import cs440.assignment1.model.Coordinate;
 import cs440.assignment1.model.Grid;
@@ -15,6 +16,7 @@ public class ForwardAStar {
     private Grid grid;
     private Agent agent;
     private Queue<Block> open;
+    //private BinaryHeap open;
     private List<Block> closed;
 
 
@@ -29,6 +31,7 @@ public class ForwardAStar {
             this.grid.getTargetPosition().setG(Integer.MAX_VALUE).setS(counter);
 
             this.open = new PriorityQueue<Block>(11, Block.Comparators.BY_F_VALUE);
+            //this.open = new BinaryHeap(11, Block.Comparators.BY_F_VALUE);
             this.closed = new ArrayList<Block>();
 
             this.agent.position().setH(calculateHValue(this.agent.position()));
