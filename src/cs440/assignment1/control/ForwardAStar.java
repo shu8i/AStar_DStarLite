@@ -23,7 +23,7 @@ public class ForwardAStar {
         this.agent = agent;
 
         int counter = 0;
-        while (!agent.position().equals(grid.getTargetPosition())) {
+        while (!this.agent.position().equals(this.grid.getTargetPosition())) {
             counter++;
             this.agent.position().setG(0).setS(counter);
             this.grid.getTargetPosition().setG(Integer.MAX_VALUE).setS(counter);
@@ -52,6 +52,7 @@ public class ForwardAStar {
     private void computePath(int counter) {
 
         while (this.open.size() != 0 && this.grid.getTargetPosition().getG() > this.open.peek().getF()) { //TODO understand why size check is necessary... for when stuck?
+            System.out.println(this.grid);
             Block minBlock = this.open.poll();
             this.closed.add(minBlock);
             List<Block> validMoves = getValidMoves(minBlock);

@@ -13,7 +13,7 @@ import static cs440.assignment1.model.BlockState.*;
  */
 public class Grid {
 
-    protected static final int GRID_WIDTH = 101, GRID_HEIGHT = 101;
+    protected static final int GRID_WIDTH = 16, GRID_HEIGHT = 16;
     protected static final int GRID_SIZE = GRID_WIDTH * GRID_HEIGHT;
     private Block[][] grid;
     private Block startingPosition, targetPosition;
@@ -62,15 +62,24 @@ public class Grid {
                         stringBuffer.append("A");
                     } else if (block.is(TARGET)) {
                         stringBuffer.append("T");
+                    } else if (block.is(TOP)) {
+                        stringBuffer.append("^");
+                    } else if (block.is(BOTTOM)) {
+                        stringBuffer.append("v");
+                    }else if (block.is(LEFT)) {
+                        stringBuffer.append("<");
+                    }else if (block.is(RIGHT)) {
+                        stringBuffer.append(">");
                     } else if (block.is(BREADCRUMB)) {
                         stringBuffer.append(".");
                     } else {
                         stringBuffer.append(" ");
                     }
-                    stringBuffer.append("|");
                 } else {
-                    stringBuffer.append(ExtendedAscii.getAscii(177)).append("|");
+                    stringBuffer.append(ExtendedAscii.getAscii(177));
                 }
+
+                stringBuffer.append("|");
 
             }
             stringBuffer.append("\n");

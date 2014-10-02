@@ -12,7 +12,13 @@ public enum BlockState {
     START("START"),
     TARGET("TARGET"),
     AGENT("AGENT"),
-    BREADCRUMB("BREADCRUMB");
+    BREADCRUMB("BREADCRUMB"),
+
+    //TODO remove
+    TOP("TOP"),
+    BOTTOM("BOTOTM"),
+    LEFT("LEFT"),
+    RIGHT("RIGHT");
 
 
     private final String text;

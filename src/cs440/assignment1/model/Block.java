@@ -60,6 +60,15 @@ public class Block {
 
     public Block setPointer(Block block) {
         this.pointer = block;
+        if(block.coordinates().getX() > this.coordinates().getX()) {
+            add(RIGHT);
+        } else if (block.coordinates().getX() < this.coordinates().getX()) {
+            add(LEFT);
+        } else if (block.coordinates().getY() > this.coordinates().getY()) {
+            add(TOP);
+        } else {
+            add(BOTTOM);
+        }
         return this;
     }
 
