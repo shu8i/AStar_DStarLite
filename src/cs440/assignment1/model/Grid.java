@@ -13,7 +13,7 @@ import static cs440.assignment1.model.BlockState.*;
  */
 public class Grid {
 
-    protected static final int GRID_WIDTH = 16, GRID_HEIGHT = 16;
+    protected static final int GRID_WIDTH = 101, GRID_HEIGHT = 101;
     protected static final int GRID_SIZE = GRID_WIDTH * GRID_HEIGHT;
     private Block[][] grid;
     private Block startingPosition, targetPosition;
@@ -36,7 +36,7 @@ public class Grid {
         return this.grid[coordinate.getY()][coordinate.getX()];
     }
 
-    public boolean isCoordinateValid(Coordinate coordinate) {
+    public boolean isCoordinateWithinBoundsAndUnblocked(Coordinate coordinate) {
 
         if (coordinate.getY() >= GRID_HEIGHT || coordinate.getY() < 0 ||
                 coordinate.getX() >= GRID_WIDTH || coordinate.getX() < 0) {
@@ -46,6 +46,25 @@ public class Grid {
         Block block = this.grid[coordinate.getY()][coordinate.getX()];
         return block.is(UNBLOCKED);
     }
+
+    public void removePointers() {
+        for (int i = 0; i < GRID_WIDTH; i++) {
+            for (int j = 0; j < GRID_HEIGHT; j++) {
+                this.grid[i][j].remove(TOP).remove(BOTTOM).remove(LEFT).remove(RIGHT);
+            }
+        }
+    }
+
+    public boolean isCoordinateWithinBounds(Coordinate coordinate) {
+
+        if (coordinate.getY() >= GRID_HEIGHT || coordinate.getY() < 0 ||
+                coordinate.getX() >= GRID_WIDTH || coordinate.getX() < 0) {
+            return false;
+        }
+
+        return true;
+    }
+
 
     @Override
     public String toString() {
@@ -62,16 +81,16 @@ public class Grid {
                         stringBuffer.append("A");
                     } else if (block.is(TARGET)) {
                         stringBuffer.append("T");
+                    } else if (block.is(BREADCRUMB)) {
+                        stringBuffer.append(".");
                     } else if (block.is(TOP)) {
                         stringBuffer.append("^");
                     } else if (block.is(BOTTOM)) {
                         stringBuffer.append("v");
-                    }else if (block.is(LEFT)) {
+                    } else if (block.is(LEFT)) {
                         stringBuffer.append("<");
-                    }else if (block.is(RIGHT)) {
+                    } else if (block.is(RIGHT)) {
                         stringBuffer.append(">");
-                    } else if (block.is(BREADCRUMB)) {
-                        stringBuffer.append(".");
                     } else {
                         stringBuffer.append(" ");
                     }

@@ -12,7 +12,7 @@ import static cs440.assignment1.model.BlockState.*;
 public class Block {
 
     private List<BlockState> blockState;
-    private Integer g, h, f, s;
+    private Integer g = Integer.MAX_VALUE, h, f, s;
     private Coordinate coordinate;
     private Block pointer;
 

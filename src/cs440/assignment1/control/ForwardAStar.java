@@ -15,8 +15,8 @@ public class ForwardAStar {
 
     private Grid grid;
     private Agent agent;
-    private Queue<Block> open;
-    //private BinaryHeap open;
+    //private Queue<Block> open;
+    private BinaryHeap open;
     private List<Block> closed;
 
 
@@ -26,36 +26,42 @@ public class ForwardAStar {
 
         int counter = 0;
         while (!this.agent.position().equals(this.grid.getTargetPosition())) {
+            this.agent.updateMemory();
             counter++;
             this.agent.position().setG(0).setS(counter);
             this.grid.getTargetPosition().setG(Integer.MAX_VALUE).setS(counter);
 
-            this.open = new PriorityQueue<Block>(11, Block.Comparators.BY_F_VALUE);
-            //this.open = new BinaryHeap(11, Block.Comparators.BY_F_VALUE);
+            //this.open = new PriorityQueue<Block>(11, Block.Comparators.BY_F_VALUE);
+            this.open = new BinaryHeap(11, Block.Comparators.BY_F_VALUE);
             this.closed = new ArrayList<Block>();
 
             this.agent.position().setH(calculateHValue(this.agent.position()));
             this.open.add(this.agent.position());
             computePath(counter);
 
+            Stack<Block> path = getPath();
+            while (!path.isEmpty()) {
+                try {
+                    this.agent.move(path.pop());
+                } catch(IllegalArgumentException e) {
+                    this.grid.removePointers();
+                    break;
+                }
+            }
+
             if (this.open.size() == 0) {
                 System.out.println("Cannot reach the target :(");
                 break;
             }
-
-            Stack<Block> path = getPath();
-            while (!path.isEmpty()) {
-                this.agent.move(path.pop());
-            }
-            System.out.println("Reached Target :)");
         }
+
+        System.out.println("Reached Target :)");
 
     }
 
     private void computePath(int counter) {
 
-        while (this.open.size() != 0 && this.grid.getTargetPosition().getG() > this.open.peek().getF()) { //TODO understand why size check is necessary... for when stuck?
-            System.out.println(this.grid);
+        while (this.grid.getTargetPosition().getG() > this.open.peek().getF()) {
             Block minBlock = this.open.poll();
             this.closed.add(minBlock);
             List<Block> validMoves = getValidMoves(minBlock);
@@ -87,7 +93,7 @@ public class ForwardAStar {
         path.add(this.grid.getTargetPosition());
         Block nextBlock = this.grid.getTargetPosition().getPointer();
 
-        while(!nextBlock.equals(this.grid.getStartingPosition())) {
+        while(!nextBlock.equals(this.agent.position())) {
             path.add(nextBlock);
             nextBlock = nextBlock.getPointer();
         }
@@ -106,7 +112,7 @@ public class ForwardAStar {
         possibleMoves.add(new Coordinate(currentCoordinate.getX(), currentCoordinate.getY()-1));
 
         for (final Coordinate coordinate : possibleMoves) {
-            if (this.agent.isMoveValid(block.coordinates(), coordinate)) {
+            if (this.agent.wouldMoveBeValid(block.coordinates(), coordinate)) {
                 validMoves.add(this.grid.getBlock(coordinate));
             }
         }

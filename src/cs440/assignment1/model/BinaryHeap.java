@@ -61,6 +61,7 @@ public class BinaryHeap {
     	for (int i = 1; i < N+1; i++){
     		if (b.equals(minqueue[i])) x = i;
     	}
+        if (x == 0) return;
     	swap(x, N);
     	N--;
         minqueue[N+1] = null;
@@ -82,8 +83,11 @@ public class BinaryHeap {
     
     private void fixAdd(int x){
     	while (x > 1) {
-    		if (compare(x/2, x)) swap(x, x/2);
-    		x = x/2;
+    		if (compare(x/2, x)) {
+                swap(x, x / 2);
+                x = x / 2;
+            }
+            else break;
         }
     }
     
