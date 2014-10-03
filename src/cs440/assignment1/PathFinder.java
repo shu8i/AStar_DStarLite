@@ -15,7 +15,45 @@ import java.util.List;
 public class PathFinder {
 
     public static void main(String[] args) {
+        
+        
+        int testNumber = 10000;
 
+        int adaptiveACountExpandedBlocks = 0;
+        int ForwardACountExpandedBlocks = 0;
+
+        int count = 0;
+        while (count<testNumber) {
+            Grid grid = new Grid.Builder().build();
+            Agent agent = new Agent(grid);
+            try {
+                ForwardAStar aStar = new ForwardAStar(grid, agent, true);
+                //System.out.println(grid);
+                adaptiveACountExpandedBlocks = aStar.countNumberOfExpandedBlocks+adaptiveACountExpandedBlocks;
+                count++;
+            } catch(NullPointerException e) {
+            }
+
+        }
+        System.out.println("The average for Adaptive A* is "+adaptiveACountExpandedBlocks/testNumber);
+
+        count = 0;
+        while (count<testNumber) {
+            Grid grid = new Grid.Builder().build();
+            Agent agent = new Agent(grid);
+            try {
+                ForwardAStar aStar = new ForwardAStar(grid, agent, false);
+                //System.out.println(grid);
+                ForwardACountExpandedBlocks = aStar.countNumberOfExpandedBlocks+ForwardACountExpandedBlocks;
+                count++;
+            } catch(NullPointerException e) {
+            }
+
+        }
+        System.out.println("The average for Forward A* is "+ForwardACountExpandedBlocks/testNumber);
+
+    /* Here is the old method:
+    
         Grid grid = new Grid.Builder().build();
         Agent agent = new Agent(grid);
         System.out.println(grid);
@@ -23,7 +61,8 @@ public class PathFinder {
 //        Block agentPosition = agent.getCurrentPosition();
 //        agent.move(new Coordinate(agentPosition.coordinates().getX()+1, agentPosition.coordinates().getY())); //might throw exception if new position is blocked. For testing only.
         System.out.println(grid);
-
+        
+    */
     }
 
 }
