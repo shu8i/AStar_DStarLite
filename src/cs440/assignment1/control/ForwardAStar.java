@@ -18,11 +18,15 @@ public class ForwardAStar {
     //private Queue<Block> open;
     private BinaryHeap open;
     private List<Block> closed;
+    public int countNumberOfExpandedBlocks;
+    private boolean getSmarter;
 
 
-    public ForwardAStar(Grid grid, Agent agent) {
+    public ForwardAStar(Grid grid, Agent agent, boolean doAdaptive) {
         this.grid = grid;
         this.agent = agent;
+        this.countNumberOfExpandedBlocks = 0;
+        this.getSmarter = doAdaptive;
 
         int counter = 0;
         while (!this.agent.position().equals(this.grid.getTargetPosition())) {
@@ -55,7 +59,7 @@ public class ForwardAStar {
             }
         }
 
-        System.out.println("Reached Target :)");
+        //System.out.println("Reached Target :)");
 
     }
 
@@ -64,6 +68,7 @@ public class ForwardAStar {
         while (this.grid.getTargetPosition().getG() > this.open.peek().getF()) {
             Block minBlock = this.open.poll();
             this.closed.add(minBlock);
+            this.countNumberOfExpandedBlocks++;
             List<Block> validMoves = getValidMoves(minBlock);
 
             for (final Block validMove : validMoves) {
@@ -77,13 +82,27 @@ public class ForwardAStar {
                     if (this.open.contains(validMove)) {
                         this.open.remove(validMove);
                     }
-
-                    validMove.setH(calculateHValue(validMove));
+                    /*
+                     For Adaptive A* we need to setH to the callculateHValue only 
+                     if a given block has not yet been assigned an H value
+                    */
+                    try {
+                        validMove.getH();
+                    } catch(NullPointerException e) {
+                        validMove.setH(calculateHValue(validMove));
+                    }
                     this.open.add(validMove);
 
                 }
             }
 
+        }
+        // Update heuristics for Adaptive A*
+        if (getSmarter){
+            int goalG = this.grid.getTargetPosition().getG();
+            for ( Block pulledMove : this.closed) {
+                pulledMove.setH(goalG - pulledMove.getG());
+            }
         }
 
     }
