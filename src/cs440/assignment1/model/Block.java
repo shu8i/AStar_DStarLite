@@ -7,7 +7,9 @@ import java.util.List;
 import static cs440.assignment1.model.BlockState.*;
 
 /**
- * Created by Shahab Shekari on 9/24/14.
+ * @author Shahab Shekari
+ * @author Felicia Yau
+ * @author Jeff Mandell
  */
 public class Block {
 

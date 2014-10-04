@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Shahab Shekari on 10/3/14.
+ * @author Shahab Shekari
+ * @author Felicia Yau
+ * @author Jeff Mandell
  */
 public abstract class AStar {
 
@@ -40,7 +42,6 @@ public abstract class AStar {
             }
         }
 
-//        return validMoves.size() == 0 ? null : validMoves;
         return validMoves;
     }
 
@@ -48,8 +49,6 @@ public abstract class AStar {
         return this.numExpandedBlocks;
     }
 
-    public abstract void search();
-    protected abstract void computePath(int counter);
-    protected abstract int calculateHValue(Block block);
+    public abstract boolean search();
 
 }

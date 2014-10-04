@@ -1,7 +1,9 @@
 package cs440.assignment1.model;
 
 /**
- * Created by Shahab Shekari on 9/24/14.
+ * @author Shahab Shekari
+ * @author Felicia Yau
+ * @author Jeff Mandell
  */
 public enum BlockState {
 
@@ -14,7 +16,7 @@ public enum BlockState {
     AGENT("AGENT"),
     BREADCRUMB("BREADCRUMB"),
 
-    //TODO remove
+    //currently not used
     TOP("TOP"),
     BOTTOM("BOTOTM"),
     LEFT("LEFT"),

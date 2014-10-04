@@ -8,7 +8,9 @@ import cs440.assignment1.model.Grid;
 import java.util.*;
 
 /**
- * Created by Shahab Shekari on 9/25/14.
+ * @author Shahab Shekari
+ * @author Felicia Yau
+ * @author Jeff Mandell
  */
 public class ForwardAStar extends AStar {
 
@@ -16,7 +18,7 @@ public class ForwardAStar extends AStar {
         super(grid, agent);
     }
 
-    public void search() {
+    public boolean search() {
 
         int counter = 0;
         while (!this.agent.position().equals(this.grid.getTargetPosition())) {
@@ -33,8 +35,7 @@ public class ForwardAStar extends AStar {
             computePath(counter);
 
             if (this.open.size() == 0) {
-                System.out.println("Cannot reach the target :(");
-                return;
+                return false;
             }
 
             Stack<Block> path = getPath();
@@ -47,7 +48,7 @@ public class ForwardAStar extends AStar {
             }
         }
 
-        System.out.println("Reached Target :)");
+        return true;
 
     }
 

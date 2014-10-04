@@ -7,7 +7,9 @@ import cs440.assignment1.model.Grid;
 import java.util.List;
 
 /**
- * Created by Shahab Shekari on 10/3/14.
+ * @author Shahab Shekari
+ * @author Felicia Yau
+ * @author Jeff Mandell
  */
 public class AdaptiveAStar extends ForwardAStar {
 

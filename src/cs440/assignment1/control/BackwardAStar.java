@@ -7,10 +7,11 @@ import cs440.assignment1.model.Grid;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 /**
- * Created by Shahab Shekari on 10/3/14.
+ * @author Shahab Shekari
+ * @author Felicia Yau
+ * @author Jeff Mandell
  */
 public class BackwardAStar extends AStar {
 
@@ -18,7 +19,7 @@ public class BackwardAStar extends AStar {
         super(grid, agent);
     }
 
-    public void search() {
+    public boolean search() {
         int counter = 0;
         while (!this.agent.position().equals(this.grid.getTargetPosition())) {
             this.agent.updateMemory();
@@ -42,12 +43,11 @@ public class BackwardAStar extends AStar {
             }
 
             if (this.open.size() == 0) {
-                System.out.println("Cannot reach the target :(");
-                return;
+                return false;
             }
         }
 
-        System.out.println("Reached Target :)");
+        return true;
     }
 
     protected int calculateHValue(Block block) {
@@ -60,6 +60,7 @@ public class BackwardAStar extends AStar {
         while (this.open.size() != 0 && this.agent.position().getG() > this.open.peek().getF()) {
             Block minBlock = this.open.poll();
             this.closed.add(minBlock);
+            this.numExpandedBlocks++;
             List<Block> validMoves = getValidMoves(minBlock);
 
             for (final Block validMove : validMoves) {

@@ -9,7 +9,9 @@ import java.util.Stack;
 import static cs440.assignment1.model.BlockState.*;
 
 /**
- * Created by Shahab Shekari on 9/24/14.
+ * @author Shahab Shekari
+ * @author Felicia Yau
+ * @author Jeff Mandell
  */
 public class Grid {
 
@@ -59,13 +61,8 @@ public class Grid {
     }
 
     public boolean isCoordinateWithinBounds(Coordinate coordinate) {
-
-        if (coordinate.getY() >= GRID_HEIGHT || coordinate.getY() < 0 ||
-                coordinate.getX() >= GRID_WIDTH || coordinate.getX() < 0) {
-            return false;
-        }
-
-        return true;
+        return coordinate.getY() < GRID_HEIGHT && coordinate.getY() >= 0
+                && coordinate.getX() < GRID_WIDTH && coordinate.getX() >= 0;
     }
 
     private void cloneGrid(Block[][] grid) {
@@ -81,44 +78,44 @@ public class Grid {
 
     @Override
     public String toString() {
-        StringBuffer stringBuffer = new StringBuffer();
+        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < this.grid.length; i++) {
-            stringBuffer.append("\t|");
+            stringBuilder.append("\t|");
             for (int j = 0; j < this.grid[0].length; j++) {
                 Block block = this.grid[i][j];
 
                 if (block.is(UNBLOCKED)) {
                     if(block.is(START)) {
-                        stringBuffer.append("S");
+                        stringBuilder.append("S");
                     } else if (block.is(AGENT)) {
-                        stringBuffer.append("A");
+                        stringBuilder.append("A");
                     } else if (block.is(TARGET)) {
-                        stringBuffer.append("T");
+                        stringBuilder.append("T");
                     } else if (block.is(BREADCRUMB)) {
-                        stringBuffer.append(".");
+                        stringBuilder.append(".");
                     }
 //                    else if (block.is(TOP)) {
-//                        stringBuffer.append("^");
+//                        stringBuilder.append("^");
 //                    } else if (block.is(BOTTOM)) {
-//                        stringBuffer.append("v");
+//                        stringBuilder.append("v");
 //                    } else if (block.is(LEFT)) {
-//                        stringBuffer.append("<");
+//                        stringBuilder.append("<");
 //                    } else if (block.is(RIGHT)) {
-//                        stringBuffer.append(">");
+//                        stringBuilder.append(">");
 //                    }
                     else {
-                        stringBuffer.append(" ");
+                        stringBuilder.append(" ");
                     }
                 } else {
-                    stringBuffer.append(ExtendedAscii.getAscii(177));
+                    stringBuilder.append(ExtendedAscii.getAscii(177));
                 }
 
-                stringBuffer.append("|");
+                stringBuilder.append("|");
 
             }
-            stringBuffer.append("\n");
+            stringBuilder.append("\n");
         }
-        return stringBuffer.toString();
+        return stringBuilder.toString();
     }
 
     public static class Builder {

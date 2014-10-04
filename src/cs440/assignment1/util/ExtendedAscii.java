@@ -1,7 +1,9 @@
 package cs440.assignment1.util;
 
 /**
- * Created by Shahab Shekari on 9/24/14.
+ * @author Shahab Shekari
+ * @author Felicia Yau
+ * @author Jeff Mandell
  */
 public class ExtendedAscii {
 
@@ -23,7 +25,7 @@ public class ExtendedAscii {
             0x2320, 0x2321, 0x00F7, 0x2248, 0x00B0, 0x2219, 0x00B7, 0x221A,
             0x207F, 0x00B2, 0x25A0, 0x00A0 };
 
-    public static final char getAscii(int code) {
+    public static char getAscii(int code) {
         if (code >= 0x80 && code <= 0xFF) {
             return EXTENDED[code - 0x7F];
         }
