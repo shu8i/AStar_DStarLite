@@ -26,8 +26,10 @@ public class Agent {
     }
 
     public Agent move(Block newBlock) {
-        if (!canMove(newBlock.coordinates())) {
-            this.memory.add(newBlock.coordinates());
+        if (newBlock == null || !canMove(newBlock.coordinates())) {
+            if (newBlock != null) {
+                this.memory.add(newBlock.coordinates());
+            }
             throw new IllegalArgumentException("New coordinates are invalid!");
         }
 
@@ -43,25 +45,17 @@ public class Agent {
     }
 
     public Agent updateMemory() {
-        Coordinate coordinate = this.position.coordinates();
-        if (!canMove(new Coordinate(coordinate.getX()+1, coordinate.getY()))) {
-            if(!this.memory.contains(new Coordinate(coordinate.getX()+1, coordinate.getY()))) {
-                this.memory.add(new Coordinate(coordinate.getX() + 1, coordinate.getY()));
-            }
-        }
-        if (!canMove(new Coordinate(coordinate.getX()-1, coordinate.getY()))) {
-            if(!this.memory.contains(new Coordinate(coordinate.getX()-1, coordinate.getY()))) {
-                this.memory.add(new Coordinate(coordinate.getX() - 1, coordinate.getY()));
-            }
-        }
-        if (!canMove(new Coordinate(coordinate.getX(), coordinate.getY()+1))) {
-            if(!this.memory.contains(new Coordinate(coordinate.getX(), coordinate.getY()+1))) {
-                this.memory.add(new Coordinate(coordinate.getX(), coordinate.getY() + 1));
-            }
-        }
-        if (!canMove(new Coordinate(coordinate.getX(), coordinate.getY()-1))) {
-            if(!this.memory.contains(new Coordinate(coordinate.getX(), coordinate.getY()-1))) {
-                this.memory.add(new Coordinate(coordinate.getX(), coordinate.getY() - 1));
+        Coordinate currentCoordinate = this.position.coordinates();
+        List<Coordinate> neighboringCoordinates = new ArrayList<Coordinate>();
+
+        neighboringCoordinates.add(new Coordinate(currentCoordinate.getX()+1, currentCoordinate.getY()));
+        neighboringCoordinates.add(new Coordinate(currentCoordinate.getX()-1, currentCoordinate.getY()));
+        neighboringCoordinates.add(new Coordinate(currentCoordinate.getX(), currentCoordinate.getY()+1));
+        neighboringCoordinates.add(new Coordinate(currentCoordinate.getX(), currentCoordinate.getY()-1));
+
+        for (final Coordinate coordinate : neighboringCoordinates) {
+            if (!canMove(coordinate) && !this.memory.contains(coordinate)) {
+                this.memory.add(coordinate);
             }
         }
 

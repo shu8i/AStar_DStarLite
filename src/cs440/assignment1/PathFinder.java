@@ -1,5 +1,7 @@
 package cs440.assignment1;
 
+import cs440.assignment1.control.AStar;
+import cs440.assignment1.control.BackwardAStar;
 import cs440.assignment1.control.ForwardAStar;
 import cs440.assignment1.model.Agent;
 import cs440.assignment1.model.Block;
@@ -16,13 +18,17 @@ public class PathFinder {
 
     public static void main(String[] args) {
 
-        Grid grid = new Grid.Builder().build();
-        Agent agent = new Agent(grid);
+        Grid grid = new Grid.Builder().build(),
+             gridCopy = new Grid(grid);
+        Agent agent = new Agent(grid),
+              agentCopy = new Agent(gridCopy);
         System.out.println(grid);
-        ForwardAStar aStar = new ForwardAStar(grid, agent);
-//        Block agentPosition = agent.getCurrentPosition();
-//        agent.move(new Coordinate(agentPosition.coordinates().getX()+1, agentPosition.coordinates().getY())); //might throw exception if new position is blocked. For testing only.
-        System.out.println(grid);
+        AStar forwardAStar = new ForwardAStar(grid, agent),
+              backwardAStar = new BackwardAStar(gridCopy, agentCopy);
+        forwardAStar.search();
+        backwardAStar.search();
+        System.out.println("Forward A*:\n" + grid);
+        System.out.println("Backward A*:\n" + gridCopy);
 
     }
 

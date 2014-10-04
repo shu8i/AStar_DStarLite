@@ -18,6 +18,17 @@ public class Grid {
     private Block[][] grid;
     private Block startingPosition, targetPosition;
 
+    public Grid(Grid grid) {
+        cloneGrid(grid.grid);
+        this.startingPosition = this.grid[grid.getStartingPosition().coordinates().getY()]
+                [grid.getStartingPosition().coordinates().getX()];
+        this.targetPosition = this.grid[grid.getTargetPosition().coordinates().getY()]
+                [grid.getTargetPosition().coordinates().getX()];
+
+        this.startingPosition.add(START);
+        this.targetPosition.add(TARGET);
+    }
+
     private Grid(Builder builder) {
         this.grid = builder.grid;
         this.startingPosition = builder.startingPosition;
@@ -47,14 +58,6 @@ public class Grid {
         return block.is(UNBLOCKED);
     }
 
-    public void removePointers() {
-        for (int i = 0; i < GRID_WIDTH; i++) {
-            for (int j = 0; j < GRID_HEIGHT; j++) {
-                this.grid[i][j].remove(TOP).remove(BOTTOM).remove(LEFT).remove(RIGHT);
-            }
-        }
-    }
-
     public boolean isCoordinateWithinBounds(Coordinate coordinate) {
 
         if (coordinate.getY() >= GRID_HEIGHT || coordinate.getY() < 0 ||
@@ -63,6 +66,16 @@ public class Grid {
         }
 
         return true;
+    }
+
+    private void cloneGrid(Block[][] grid) {
+        this.grid = new Block[GRID_HEIGHT][GRID_WIDTH];
+        for (int i = 0; i < GRID_HEIGHT; i++) {
+            for (int j = 0; j < GRID_WIDTH; j++) {
+                this.grid[i][j] = new Block(j, i);
+                this.grid[i][j].add(grid[i][j].is(BLOCKED) ? BLOCKED : UNBLOCKED);
+            }
+        }
     }
 
 
@@ -83,15 +96,17 @@ public class Grid {
                         stringBuffer.append("T");
                     } else if (block.is(BREADCRUMB)) {
                         stringBuffer.append(".");
-                    } else if (block.is(TOP)) {
-                        stringBuffer.append("^");
-                    } else if (block.is(BOTTOM)) {
-                        stringBuffer.append("v");
-                    } else if (block.is(LEFT)) {
-                        stringBuffer.append("<");
-                    } else if (block.is(RIGHT)) {
-                        stringBuffer.append(">");
-                    } else {
+                    }
+//                    else if (block.is(TOP)) {
+//                        stringBuffer.append("^");
+//                    } else if (block.is(BOTTOM)) {
+//                        stringBuffer.append("v");
+//                    } else if (block.is(LEFT)) {
+//                        stringBuffer.append("<");
+//                    } else if (block.is(RIGHT)) {
+//                        stringBuffer.append(">");
+//                    }
+                    else {
                         stringBuffer.append(" ");
                     }
                 } else {
