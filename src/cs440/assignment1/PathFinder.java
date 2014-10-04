@@ -1,6 +1,7 @@
 package cs440.assignment1;
 
 import cs440.assignment1.control.AStar;
+import cs440.assignment1.control.AdaptiveAStar;
 import cs440.assignment1.control.BackwardAStar;
 import cs440.assignment1.control.ForwardAStar;
 import cs440.assignment1.model.Agent;
@@ -30,6 +31,38 @@ public class PathFinder {
         System.out.println("Forward A*:\n" + grid);
         System.out.println("Backward A*:\n" + gridCopy);
 
+        adaptiveAStarVsForwardAStar();
+
+    }
+
+    private static void adaptiveAStarVsForwardAStar() {
+        int testNumber = 1000;
+
+        int adaptiveACountExpandedBlocks = 0, forwardACountExpandedBlocks = 0;
+        Grid grid;
+        Agent agent;
+        AStar aStar;
+
+        int count = 0;
+        while (count++ < testNumber) {
+            grid = new Grid.Builder().build();
+            agent = new Agent(grid);
+            aStar = new AdaptiveAStar(grid, agent);
+            aStar.search();
+            adaptiveACountExpandedBlocks += aStar.getNumExpandedBlocks();
+        }
+
+        count = 0;
+        while (count++ < testNumber) {
+            grid = new Grid.Builder().build();
+            agent = new Agent(grid);
+            aStar = new ForwardAStar(grid, agent);
+            aStar.search();
+            forwardACountExpandedBlocks += aStar.getNumExpandedBlocks();
+
+        }
+        System.out.println("The average for Adaptive A* is " + adaptiveACountExpandedBlocks / testNumber);
+        System.out.println("The average for Forward A* is " + forwardACountExpandedBlocks / testNumber);
     }
 
 }

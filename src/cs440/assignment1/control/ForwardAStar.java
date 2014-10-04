@@ -32,6 +32,11 @@ public class ForwardAStar extends AStar {
             this.open.add(this.agent.position());
             computePath(counter);
 
+            if (this.open.size() == 0) {
+                System.out.println("Cannot reach the target :(");
+                return;
+            }
+
             Stack<Block> path = getPath();
             while (!path.isEmpty()) {
                 try {
@@ -40,22 +45,18 @@ public class ForwardAStar extends AStar {
                     break;
                 }
             }
-
-            if (this.open.size() == 0) {
-                System.out.println("Cannot reach the target :(");
-                return;
-            }
         }
 
         System.out.println("Reached Target :)");
 
     }
 
-    void computePath(int counter) {
+    protected void computePath(int counter) {
 
         while (this.open.size() != 0 && this.grid.getTargetPosition().getG() > this.open.peek().getF()) {
             Block minBlock = this.open.poll();
             this.closed.add(minBlock);
+            this.numExpandedBlocks++;
             List<Block> validMoves = getValidMoves(minBlock);
 
             for (final Block validMove : validMoves) {
@@ -93,7 +94,7 @@ public class ForwardAStar extends AStar {
         return path;
     }
 
-    int calculateHValue(Block block) {
+    protected int calculateHValue(Block block) {
         return Math.abs(block.coordinates().getX() - this.grid.getTargetPosition().coordinates().getX()) +
                 Math.abs(block.coordinates().getY() - this.grid.getTargetPosition().coordinates().getY());
     }

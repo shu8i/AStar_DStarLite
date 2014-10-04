@@ -55,7 +55,7 @@ public class BackwardAStar extends AStar {
                 Math.abs(block.coordinates().getY() - this.agent.position().coordinates().getY());
     }
 
-    void computePath(int counter) {
+    protected void computePath(int counter) {
 
         while (this.open.size() != 0 && this.agent.position().getG() > this.open.peek().getF()) {
             Block minBlock = this.open.poll();

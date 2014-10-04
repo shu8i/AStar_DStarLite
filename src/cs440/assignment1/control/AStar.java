@@ -14,12 +14,14 @@ public abstract class AStar {
     protected Agent agent;
     protected BinaryHeap open;
     protected List<Block> closed;
+    protected int numExpandedBlocks;
 
     public AStar(Grid grid, Agent agent) {
         this.grid = grid;
         this.agent = agent;
         this.open = new BinaryHeap(11, Block.Comparators.BY_F_VALUE);
         this.closed = new ArrayList<Block>();
+        this.numExpandedBlocks = 0;
     }
 
     protected List<Block> getValidMoves(Block block) {
@@ -38,11 +40,16 @@ public abstract class AStar {
             }
         }
 
-        return validMoves.size() == 0 ? null : validMoves;
+//        return validMoves.size() == 0 ? null : validMoves;
+        return validMoves;
+    }
+
+    public int getNumExpandedBlocks() {
+        return this.numExpandedBlocks;
     }
 
     public abstract void search();
-    abstract void computePath(int counter);
-    abstract int calculateHValue(Block block);
+    protected abstract void computePath(int counter);
+    protected abstract int calculateHValue(Block block);
 
 }

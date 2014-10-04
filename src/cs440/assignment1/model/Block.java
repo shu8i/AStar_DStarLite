@@ -76,19 +76,19 @@ public class Block {
         return this;
     }
 
-    public int getG() {
+    public Integer getG() {
         return this.g;
     }
 
-    public int getH() {
+    public Integer getH() {
         return this.h;
     }
 
-    public int getF() {
+    public Integer getF() {
         return this.f;
     }
 
-    public int getS() {
+    public Integer getS() {
         return this.s;
     }
 
