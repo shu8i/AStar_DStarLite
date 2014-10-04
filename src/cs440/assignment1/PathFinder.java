@@ -19,7 +19,7 @@ public class PathFinder {
     }
 
     private static void compareAStarAlgorithms() {
-        int numTests = 1000;
+        int sampleSize = 50;
 
         int adaptiveAStarExpandedBlocks = 0,
                 adaptiveAStarSuccesses = 0,
@@ -32,7 +32,7 @@ public class PathFinder {
         AStar aStar;
 
         int count = 0;
-        while (count++ < numTests) {
+        while (count++ < sampleSize) {
             grid = new Grid.Builder().build();
             gridCopy = new Grid(grid);
             gridCopy2 = new Grid(grid);
@@ -55,14 +55,14 @@ public class PathFinder {
         }
 
         System.out.println("The average expansion for Adaptive A* is "
-                + adaptiveAStarExpandedBlocks / numTests +
-                " (" + adaptiveAStarSuccesses + "/" + numTests + " paths found).");
+                + adaptiveAStarExpandedBlocks / sampleSize +
+                " (" + adaptiveAStarSuccesses + "/" + sampleSize + " paths found).");
         System.out.println("The average expansion for Forward A* is "
-                + forwardAStarExpandedBlocks / numTests +
-                " (" + forwardAStarSuccesses + "/" + numTests + " paths found).");
+                + forwardAStarExpandedBlocks / sampleSize +
+                " (" + forwardAStarSuccesses + "/" + sampleSize + " paths found).");
         System.out.println("The average expansion for Backward A* is "
-                + backwardAStarExpandedBlocks / numTests +
-                " (" + backwardAStarSuccesses + "/" + numTests + " paths found).");
+                + backwardAStarExpandedBlocks / sampleSize +
+                " (" + backwardAStarSuccesses + "/" + sampleSize + " paths found).");
     }
 
 }
