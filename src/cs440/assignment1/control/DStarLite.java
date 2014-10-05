@@ -26,16 +26,38 @@ public class DStarLite extends AStar {
 
     public boolean search() {
 
-        computePath();
-
         while (!this.grid.getStartingPosition().equals(this.grid.getTargetPosition())) {
+            this.agent.updateMemory();
+            computePath();
             if (this.grid.getStartingPosition().getG() == Integer.MAX_VALUE) {
                 return false;
             }
+
+            try {
+                this.agent.move(getMinSucc(this.grid.getStartingPosition()));
+                this.grid.setStartingPosition(getMinSucc(this.grid.getStartingPosition()));
+            } catch(IllegalArgumentException e) {
+                continue;
+            }
+            System.out.println(grid);
             System.out.println();
         }
 
         return true;
+    }
+
+    private Block getMinSucc(Block block) {
+        List<Block> neighbors = getSucc(this.grid.getStartingPosition());
+        int min = Integer.MAX_VALUE;
+        Block next = this.grid.getStartingPosition();
+
+        for (final Block b : neighbors) {
+            if (b.getG() < min) {
+                min = b.getG();
+                next = b;
+            }
+        }
+        return next;
     }
 
     private Block calculateKey(Block block) {
@@ -76,23 +98,22 @@ public class DStarLite extends AStar {
 
 
     private void updateVertex(Block block) {
-        List<Block> s;
+        List<Block> neighbors;
 
         if (!this.grid.getTargetPosition().equals(block)) {
-            s = getSucc(block);
+            neighbors = getSucc(block);
             int tmp = Integer.MAX_VALUE;
             int tmp2;
 
-            for (Block i : s) {
-                tmp2 = i.getG() + 1;
+            for (final Block b : neighbors) {
+                if (b.getG() == Integer.MAX_VALUE) {
+                    continue;
+                }
+                tmp2 = b.getG() + 1;
                 if (tmp2 < tmp) tmp = tmp2;
             }
 
             block.setRHS(tmp);
-        }
-
-        if (!block.equals(this.grid.getTargetPosition())) {
-
         }
 
         if (this.open.contains(block)) {
@@ -110,7 +131,7 @@ public class DStarLite extends AStar {
         LinkedList<Block> s = new LinkedList<Block>();
         Block tempBlock;
 
-        if (u.is(BLOCKED)) return s;
+        if(this.agent.remembers(u)) return s;
 
         tempBlock = this.grid.getBlock(new Coordinate(u.coordinates().getX()+1, u.coordinates().getY()));
         if (tempBlock != null) s.add(tempBlock);
@@ -143,7 +164,7 @@ public class DStarLite extends AStar {
         for (final Coordinate coordinate : possibleMoves) {
 //            if (this.agent.wouldMoveBeValid(block.coordinates(), coordinate)) {
             if (this.grid.isCoordinateWithinBounds(coordinate) &&
-                    this.grid.getBlock(coordinate).is(UNBLOCKED)) {
+                    !this.agent.remembers(this.grid.getBlock(coordinate))) {
                 validMoves.add(this.grid.getBlock(coordinate));
             }
         }
