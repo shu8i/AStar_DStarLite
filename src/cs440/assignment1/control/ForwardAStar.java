@@ -14,8 +14,11 @@ import java.util.*;
  */
 public class ForwardAStar extends AStar {
 
-    public ForwardAStar(Grid grid, Agent agent) {
+    private Comparator<Block> comparator;
+
+    public ForwardAStar(Grid grid, Agent agent, Comparator<Block> comparator) {
         super(grid, agent);
+        this.comparator = comparator;
     }
 
     public boolean search() {
@@ -27,7 +30,7 @@ public class ForwardAStar extends AStar {
             this.agent.position().setG(0).setS(counter);
             this.grid.getTargetPosition().setG(Integer.MAX_VALUE).setS(counter);
 
-            this.open = new BinaryHeap(11, Block.Comparators.BY_F_VALUE);
+            this.open = new BinaryHeap(11, comparator);
             this.closed = new ArrayList<Block>();
 
             this.agent.position().setH(calculateHValue(this.agent.position()));
@@ -42,6 +45,7 @@ public class ForwardAStar extends AStar {
             while (!path.isEmpty()) {
                 try {
                     this.agent.move(path.pop());
+                    this.numMoved++;
                 } catch(IllegalArgumentException e) {
                     break;
                 }
@@ -52,7 +56,7 @@ public class ForwardAStar extends AStar {
 
     }
 
-    protected void computePath(int counter) {
+    private void computePath(int counter) {
 
         while (this.open.size() != 0 && this.grid.getTargetPosition().getG() > this.open.peek().getF()) {
             Block minBlock = this.open.poll();

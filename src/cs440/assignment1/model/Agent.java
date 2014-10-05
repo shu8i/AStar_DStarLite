@@ -32,13 +32,17 @@ public class Agent {
             if (newBlock != null) {
                 this.memory.add(newBlock.coordinates());
             }
-//            throw new IllegalArgumentException("New coordinates are invalid!");
+            throw new IllegalArgumentException("New coordinates are invalid!");
         }
 
         this.position.remove(AGENT).add(BREADCRUMB);
         this.position = newBlock;
         this.position.add(AGENT);
         return this;
+    }
+
+    public boolean remembers(Block block) {
+        return this.memory.contains(block.coordinates());
     }
 
     public boolean canMove(Coordinate coordinate) {
