@@ -1,8 +1,6 @@
 package cs440.assignment1.control;
 
-import cs440.assignment1.model.Agent;
-import cs440.assignment1.model.Block;
-import cs440.assignment1.model.Grid;
+import cs440.assignment1.model.*;
 
 import java.util.List;
 
@@ -14,7 +12,7 @@ import java.util.List;
 public class AdaptiveAStar extends ForwardAStar {
 
     public AdaptiveAStar(Grid grid, Agent agent) {
-        super(grid, agent);
+        super(grid, agent, Block.Comparators.BY_F_LARGER_G);
     }
 
     protected void computePath(int counter) {
@@ -46,9 +44,21 @@ public class AdaptiveAStar extends ForwardAStar {
 
         }
 
+        int before, after;
         int goalG = this.grid.getTargetPosition().getG();
         for (final Block move : this.closed) {
-            move.setH(goalG - move.getG());
+            before = move.getH();
+            after = goalG - move.getG();
+
+
+//            if (before > after) {
+////                System.out.println(grid);
+//                System.out.println();
+//            }
+
+            if (before <= after) {
+                move.setH(goalG - move.getG());
+            }
         }
 
     }

@@ -1,12 +1,10 @@
 package cs440.assignment1.control;
 
-import cs440.assignment1.model.Agent;
-import cs440.assignment1.model.BinaryHeap;
-import cs440.assignment1.model.Block;
-import cs440.assignment1.model.Grid;
+import cs440.assignment1.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 /**
  * @author Shahab Shekari
@@ -14,6 +12,7 @@ import java.util.List;
  * @author Jeff Mandell
  */
 public class BackwardAStar extends AStar {
+
 
     public BackwardAStar(Grid grid, Agent agent) {
         super(grid, agent);
@@ -27,12 +26,16 @@ public class BackwardAStar extends AStar {
             this.grid.getTargetPosition().setG(0).setS(counter);
             this.agent.position().setG(Integer.MAX_VALUE).setS(counter);
 
-            this.open = new BinaryHeap(11, Block.Comparators.BY_F_VALUE);
+            this.open = new BinaryHeap(11, Block.Comparators.BY_F_LARGER_G);
             this.closed = new ArrayList<Block>();
 
             this.grid.getTargetPosition().setH(calculateHValue(this.grid.getTargetPosition()));
             this.open.add(this.grid.getTargetPosition());
             computePath(counter);
+
+            if (this.open.size() == 0) {
+                return false;
+            }
 
             while (!this.agent.position().equals(this.grid.getTargetPosition())) {
                 try {
@@ -40,10 +43,6 @@ public class BackwardAStar extends AStar {
                 } catch(IllegalArgumentException e) {
                     break;
                 }
-            }
-
-            if (this.open.size() == 0) {
-                return false;
             }
         }
 

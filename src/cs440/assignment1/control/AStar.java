@@ -17,13 +17,15 @@ public abstract class AStar {
     protected BinaryHeap open;
     protected List<Block> closed;
     protected int numExpandedBlocks;
+    protected int numMoved;
 
     public AStar(Grid grid, Agent agent) {
         this.grid = grid;
         this.agent = agent;
-        this.open = new BinaryHeap(11, Block.Comparators.BY_F_VALUE);
+        this.open = new BinaryHeap(11, Block.Comparators.BY_F_LARGER_G);
         this.closed = new ArrayList<Block>();
         this.numExpandedBlocks = 0;
+        this.numMoved = 0;
     }
 
     protected List<Block> getValidMoves(Block block) {
