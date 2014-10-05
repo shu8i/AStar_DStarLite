@@ -1,8 +1,11 @@
 package cs440.assignment1.model;
 
+import cs440.assignment1.control.dstarlite.Pair;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 import static cs440.assignment1.model.BlockState.*;
 
@@ -14,15 +17,17 @@ import static cs440.assignment1.model.BlockState.*;
 public class Block {
 
     private List<BlockState> blockState;
-    private Integer g = Integer.MAX_VALUE, h, f, s;
+    private Integer g = Integer.MAX_VALUE, h, f, s, rhs = g;
     private Coordinate coordinate;
     private Block pointer;
+    private Key key;
 
     public Block(int x, int y) {
         this.blockState = new ArrayList<BlockState>();
         this.blockState.add(BlockState.UNVISITED);
         this.coordinate = new Coordinate(x, y);
         this.s = 0;
+        this.key = new Key(0, 0);
     }
 
     public boolean is(BlockState state) {
@@ -60,19 +65,29 @@ public class Block {
         return this;
     }
 
+    public Block setRHS(int rhs) {
+        this.rhs = rhs;
+        return this;
+    }
+
+    public Block setKey(Key key) {
+        this.key = key;
+        return this;
+    }
+
     public Block setPointer(Block block) {
         this.pointer = block;
 
-        this.pointer.remove(TOP).remove(BOTTOM).remove(LEFT).remove(RIGHT);
+        remove(TOP).remove(BOTTOM).remove(LEFT).remove(RIGHT);
 
         if(this.pointer.coordinates().getX() > this.coordinates().getX()) {
             add(RIGHT);
         } else if (this.pointer.coordinates().getX() < this.coordinates().getX()) {
             add(LEFT);
         } else if (this.pointer.coordinates().getY() > this.coordinates().getY()) {
-            add(TOP);
-        } else {
             add(BOTTOM);
+        } else {
+            add(TOP);
         }
 
         return this;
@@ -92,6 +107,14 @@ public class Block {
 
     public Integer getS() {
         return this.s;
+    }
+
+    public Integer getRHS() {
+        return this.rhs;
+    }
+
+    public Key getKey() {
+        return this.key;
     }
 
     public Block getPointer() {
@@ -128,10 +151,41 @@ public class Block {
 
     public static class Comparators {
 
-        public static Comparator<Block> BY_F_VALUE = new Comparator<Block>() {
+        public static Comparator<Block> BY_F_LARGER_G = new Comparator<Block>() {
             @Override
             public int compare(Block block1, Block block2) {
+                Random random = new Random();
+                if (block1.getF() == block2.getF()) {
+                    if (block1.getG() == block2.getG()) {
+                        return random.nextInt(2) == 0 ? -1 : 1;
+                    } else {
+                        return block2.getG() - block1.getG();
+                    }
+                }
                 return block1.getF() - block2.getF();
+            }
+        };
+
+        public static Comparator<Block> BY_F_SMALLER_G = new Comparator<Block>() {
+            @Override
+            public int compare(Block block1, Block block2) {
+                Random random = new Random();
+                if (block1.getF() == block2.getF()) {
+                    if (block1.getG() == block2.getG()) {
+                        return random.nextInt(2) == 0 ? -1 : 1;
+                    } else {
+                        return block1.getG() - block2.getG();
+                    }
+                }
+                return block1.getF() - block2.getF();
+            }
+        };
+
+        public static Comparator<Block> BY_KEY = new Comparator<Block>() {
+            @Override
+            public int compare(Block block1, Block block2) {
+                return block1.getKey().lt(block2.getKey()) ? -1 :
+                        (block1.getKey().gt(block2.getKey()) ? 1 : 0);
             }
         };
 
