@@ -5,8 +5,6 @@ import cs440.assignment1.model.Agent;
 import cs440.assignment1.model.Block;
 import cs440.assignment1.model.Grid;
 
-import java.util.List;
-
 /**
  * @author Shahab Shekari
  * @author Felicia Yau
@@ -15,8 +13,8 @@ import java.util.List;
 public class PathFinder {
 
     public static void main(String[] args) {
-//        compareAStarAlgorithms();
-        doDStar();
+        compareAStarAlgorithms();
+//        doDStar();
     }
 
     private static void compareAStarAlgorithms() {
@@ -29,8 +27,8 @@ public class PathFinder {
                 forwardAStarExpandedBlocks2 = 0,
                 forwardAStarSuccesses2 = 0,
                 backwardAStarExpandedBlocks = 0,
-                backwardAStarSuccesses = 0,
-                numMover = 0;
+                backwardAStarSuccesses = 0;
+
         Grid grid, gridCopy, gridCopy2, gridCopy3;
         Agent agent, agentCopy, agentCopy2, agentCopy3;
         AStar aStar;
@@ -38,7 +36,6 @@ public class PathFinder {
         int count = 0;
         while (count++ < sampleSize) {
             grid = new Grid.Builder().build();
-//            grid = new Grid(true);
             gridCopy = new Grid(grid);
             gridCopy2 = new Grid(grid);
             gridCopy3 = new Grid(grid);
@@ -50,23 +47,18 @@ public class PathFinder {
             aStar = new AdaptiveAStar(grid, agent);
             adaptiveAStarSuccesses += aStar.search() ? 1 : 0;
             adaptiveAStarExpandedBlocks += aStar.getNumExpandedBlocks();
-//            System.out.println(grid);
 
             aStar = new ForwardAStar(gridCopy, agentCopy, Block.Comparators.BY_F_LARGER_G);
             forwardAStarSuccesses += aStar.search() ? 1 : 0;
             forwardAStarExpandedBlocks += aStar.getNumExpandedBlocks();
-//            System.out.println(gridCopy);
-//            System.out.println(aStar.getNumMoved());
 
             aStar = new ForwardAStar(gridCopy2, agentCopy2, Block.Comparators.BY_F_SMALLER_G);
             forwardAStarSuccesses2 += aStar.search() ? 1 : 0;
             forwardAStarExpandedBlocks2 += aStar.getNumExpandedBlocks();
-//            System.out.println(gridCopy2);
 
             aStar = new BackwardAStar(gridCopy3, agentCopy3);
             backwardAStarSuccesses += aStar.search() ? 1 : 0;
             backwardAStarExpandedBlocks += aStar.getNumExpandedBlocks();
-//            System.out.println(gridCopy3);
 
         }
 
@@ -85,27 +77,25 @@ public class PathFinder {
     }
 
     private static void doDStar() {
-//        //Create pathfinder
-//        DStarLite pf = new DStarLite();
-//        //set start and goal nodes
-//        pf.init();
-//
-//        //perform the pathfinding
-//        pf.replan();
-//
-//        System.out.println(pf.getGrid());
-//        //get and print the path
-//        List<State> path = pf.getPath();
-//        for (State i : path)
-//        {
-//            System.out.println("x: " + i.x + " y: " + i.y);
-//        }
 
-        Grid grid = new Grid.Builder().build();
-        Agent agent = new Agent(grid);
+        Grid grid = new Grid.Builder().build(),
+             gridCopy = new Grid(grid);
+        Agent agent = new Agent(grid),
+              agentCopy = new Agent(gridCopy);
+
         DStarLite dStar = new DStarLite(grid, agent);
+        AdaptiveAStar aaStar = new AdaptiveAStar(gridCopy, agentCopy);
+
+        long startTime = System.currentTimeMillis();
         dStar.search();
-        System.out.println(grid);
+        long endTime = System.currentTimeMillis();
+        System.out.println(grid + "\n" + (endTime-startTime));
+
+
+        startTime = System.currentTimeMillis();
+        aaStar.search();
+        endTime = System.currentTimeMillis();
+        System.out.println(gridCopy + "\n" + (endTime-startTime));
 
     }
 

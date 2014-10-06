@@ -45,7 +45,6 @@ public class ForwardAStar extends AStar {
             while (!path.isEmpty()) {
                 try {
                     this.agent.move(path.pop());
-                    this.numMoved++;
                 } catch(IllegalArgumentException e) {
                     break;
                 }

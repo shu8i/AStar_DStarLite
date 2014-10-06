@@ -4,7 +4,6 @@ import cs440.assignment1.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
 
 /**
  * @author Shahab Shekari

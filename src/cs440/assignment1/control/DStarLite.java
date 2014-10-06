@@ -1,18 +1,16 @@
 package cs440.assignment1.control;
 
 import cs440.assignment1.model.*;
-import static cs440.assignment1.model.BlockState.*;
-import static cs440.assignment1.model.Block.*;
 
 import java.util.*;
 
 /**
- * Created by Shahab Shekari on 10/5/14.
+ * @author Shahab Shekari
+ * @author Felicia Yau
+ * @author Jeff Mandell
  */
 public class DStarLite extends AStar {
 
-//    public Map<Block, Block> blockHash = new HashMap<Block, Block>();       //TODO fix this
-//    public List<Block> blockList = new ArrayList<Block>();
     public Integer k_m;
 
     public DStarLite(Grid grid, Agent agent) {
@@ -26,43 +24,69 @@ public class DStarLite extends AStar {
 
     public boolean search() {
 
+        computePath();
+
+        Block last = this.grid.getStartingPosition();
+
         while (!this.grid.getStartingPosition().equals(this.grid.getTargetPosition())) {
-            this.agent.updateMemory();
-            computePath();
+
             if (this.grid.getStartingPosition().getG() == Integer.MAX_VALUE) {
                 return false;
             }
 
+            Block next = getMinSucc(this.grid.getStartingPosition());
             try {
-                this.agent.move(getMinSucc(this.grid.getStartingPosition()));
-                this.grid.setStartingPosition(getMinSucc(this.grid.getStartingPosition()));
+                this.agent.move(next);
+                this.grid.setStartingPosition(next);
             } catch(IllegalArgumentException e) {
+                next.setC(Integer.MAX_VALUE);
+                k_m += calculateHValue(this.grid.getStartingPosition(), last);
+                last = this.grid.getStartingPosition();
+                updateVertex(this.grid.getStartingPosition());
+                computePath();
                 continue;
             }
-            System.out.println(grid);
-            System.out.println();
         }
 
         return true;
     }
 
     private Block getMinSucc(Block block) {
-        List<Block> neighbors = getSucc(this.grid.getStartingPosition());
-        int min = Integer.MAX_VALUE;
-        Block next = this.grid.getStartingPosition();
+        List<Block> neighbors = getSucc(block);
+        int min = Integer.MAX_VALUE, curr;
+        Block next = block;
 
         for (final Block b : neighbors) {
-            if (b.getG() < min) {
-                min = b.getG();
+            if (b.getG() == Integer.MAX_VALUE || b.getC() == Integer.MAX_VALUE) {
+                curr = Integer.MAX_VALUE;
+            } else {
+                curr = b.getG() + b.getC();
+            }
+
+            if (curr < min) {
+                min = curr;
                 next = b;
             }
         }
-        return next;
+
+        if (next == block) {
+            for (final Block b : neighbors) {
+                if (b.getC() != Integer.MAX_VALUE) {
+                    return b;
+                }
+            }
+        }
+
+        return next == block ? null : next;
     }
 
     private Block calculateKey(Block block) {
         int val = Math.min(block.getRHS(), block.getG());
-        return block.setKey(new Key(val + calculateHValue(block) + k_m, val));
+        if (val == Integer.MAX_VALUE) {
+            return block.setKey(new Key(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        } else {
+            return block.setKey(new Key(val + calculateHValue(block) + k_m, val));
+        }
     }
 
     private void computePath() {
@@ -98,22 +122,17 @@ public class DStarLite extends AStar {
 
 
     private void updateVertex(Block block) {
-        List<Block> neighbors;
 
         if (!this.grid.getTargetPosition().equals(block)) {
-            neighbors = getSucc(block);
-            int tmp = Integer.MAX_VALUE;
-            int tmp2;
-
-            for (final Block b : neighbors) {
-                if (b.getG() == Integer.MAX_VALUE) {
-                    continue;
-                }
-                tmp2 = b.getG() + 1;
-                if (tmp2 < tmp) tmp = tmp2;
+            Block minSucc = getMinSucc(block);
+            if (minSucc == null) {
+                return;
             }
-
-            block.setRHS(tmp);
+            if (minSucc.getG() == Integer.MAX_VALUE || minSucc.getC() == Integer.MAX_VALUE) {
+                block.setRHS(Integer.MAX_VALUE);
+            } else {
+                block.setRHS(minSucc.getG() + minSucc.getC());
+            }
         }
 
         if (this.open.contains(block)) {
@@ -175,6 +194,11 @@ public class DStarLite extends AStar {
     protected int calculateHValue(Block block) {
         return Math.abs(block.coordinates().getX() - this.grid.getStartingPosition().coordinates().getX()) +
                 Math.abs(block.coordinates().getY() - this.grid.getStartingPosition().coordinates().getY());
+    }
+
+    protected int calculateHValue(Block block1, Block block2) {
+        return Math.abs(block1.coordinates().getX() - block2.coordinates().getX()) +
+                Math.abs(block1.coordinates().getY() - block2.coordinates().getY());
     }
 
 }

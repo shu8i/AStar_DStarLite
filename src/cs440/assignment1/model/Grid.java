@@ -15,12 +15,12 @@ import static cs440.assignment1.model.BlockState.*;
  */
 public class Grid {
 
-    public static final int GRID_WIDTH = 5, GRID_HEIGHT = 5;
+    public static final int GRID_WIDTH = 101, GRID_HEIGHT = 101;
     public static final int GRID_SIZE = GRID_WIDTH * GRID_HEIGHT;
     private Block[][] grid;
     private Block startingPosition, targetPosition;
 
-    public Grid(boolean lol) {
+    public Grid(boolean classExample) {
         this.grid = new Block[5][5];
         for(int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
@@ -124,15 +124,15 @@ public class Grid {
                     } else if (block.is(BREADCRUMB)) {
                         stringBuilder.append(".");
                     }
-                    else if (block.is(TOP)) {
-                        stringBuilder.append("^");
-                    } else if (block.is(BOTTOM)) {
-                        stringBuilder.append("v");
-                    } else if (block.is(LEFT)) {
-                        stringBuilder.append("<");
-                    } else if (block.is(RIGHT)) {
-                        stringBuilder.append(">");
-                    }
+//                    else if (block.is(TOP)) {
+//                        stringBuilder.append("^");
+//                    } else if (block.is(BOTTOM)) {
+//                        stringBuilder.append("v");
+//                    } else if (block.is(LEFT)) {
+//                        stringBuilder.append("<");
+//                    } else if (block.is(RIGHT)) {
+//                        stringBuilder.append(">");
+//                    }
                     else {
                         stringBuilder.append(" ");
                     }
@@ -183,7 +183,7 @@ public class Grid {
                     currentBlock = unblockedPath.pop();
                 }
 
-                if (random.nextInt(10) > 9) {
+                if (random.nextInt(10) > 6) {
                     currentBlock.add(BLOCKED);
                 } else {
                     currentBlock.add(UNBLOCKED);

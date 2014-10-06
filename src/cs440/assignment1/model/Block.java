@@ -1,7 +1,5 @@
 package cs440.assignment1.model;
 
-import cs440.assignment1.control.dstarlite.Pair;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -17,7 +15,7 @@ import static cs440.assignment1.model.BlockState.*;
 public class Block {
 
     private List<BlockState> blockState;
-    private Integer g = Integer.MAX_VALUE, h, f, s, rhs = g;
+    private Integer g = Integer.MAX_VALUE, h, f, s, rhs = g, c;
     private Coordinate coordinate;
     private Block pointer;
     private Key key;
@@ -28,6 +26,16 @@ public class Block {
         this.coordinate = new Coordinate(x, y);
         this.s = 0;
         this.key = new Key(0, 0);
+        this.c = 1;
+    }
+
+    public Block setC(int c) {
+        this.c = c;
+        return this;
+    }
+
+    public int getC() {
+        return this.c;
     }
 
     public boolean is(BlockState state) {

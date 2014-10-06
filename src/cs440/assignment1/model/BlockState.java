@@ -18,7 +18,7 @@ public enum BlockState {
 
     //currently not used
     TOP("TOP"),
-    BOTTOM("BOTOTM"),
+    BOTTOM("BOTTOM"),
     LEFT("LEFT"),
     RIGHT("RIGHT");
 
